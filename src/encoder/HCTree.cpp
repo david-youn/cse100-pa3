@@ -5,10 +5,29 @@
  */
 #include "HCTree.hpp"
 
-/* TODO */
-HCTree::~HCTree() { root = nullptr; }
-
 priority_queue<HCNode*, vector<HCNode*>, HCNodePtrComp> pq;
+
+static void deleteHelper(HCNode* n) {
+    if (n == nullptr) {
+        return;
+    }
+    // recursively goes through the left sub-tree of the tree
+    deleteHelper(n->c0);
+    // recursively goes through the right sub-tree of the tree
+    deleteHelper(n->c1);
+    delete (n);
+    n = nullptr;
+}
+
+/* TODO */
+HCTree::~HCTree() {
+    while (pq.size() != 0) {
+        delete pq.top();
+        pq.pop();
+    }
+    deleteHelper(root);
+    root = nullptr;
+}
 
 /* TODO */
 void HCTree::build(const vector<unsigned int>& freqs) {
@@ -59,7 +78,7 @@ void HCTree::build(const vector<unsigned int>& freqs) {
 void HCTree::encode(byte symbol, ostream& out) const {
     HCNode* curr = nullptr;
     HCNode* prev = nullptr;
-    // string code = "";
+    string code = "";
 
     curr = leaves.at(symbol);
     while (curr != root) {
@@ -68,17 +87,27 @@ void HCTree::encode(byte symbol, ostream& out) const {
 
         // checking if c0 or c1
         if (curr->c0 == prev) {
-            // code = '0' + code;
-            out << '0';
+            code = '0' + code;
         } else {
-            // code = '1' + code;
-            out << '1';
+            code = '1' + code;
         }
     }
+    out << code;
 }
 
 /* TODO */
 // byte HCTree::decode(BitInputStream& in) const { return ' '; }
 
 /* TODO */
-byte HCTree::decode(istream& in) const { return ' '; }
+byte HCTree::decode(istream& in) const {
+    HCNode* curr = root;
+    char c;
+    while (in.get(c)) {
+        if (c == '0') {
+            curr = root->c0;
+        } else {
+            curr = root->c1;
+        }
+    }
+    return curr->symbol;
+}

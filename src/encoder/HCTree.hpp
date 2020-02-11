@@ -23,7 +23,7 @@ class HCTree {
 
   public:
     /* TODO: add function header and implement */
-    HCTree() {}
+    HCTree() { root = nullptr; }
 
     /* TODO: add function header */
     ~HCTree();
