@@ -81,6 +81,12 @@ void HCTree::encode(byte symbol, ostream& out) const {
     string code = "";
 
     curr = leaves.at(symbol);
+
+    // for the case of just having one node in the HCT
+    if (curr == root) {
+        out << "0";
+    }
+
     while (curr != root) {
         prev = curr;
         curr = curr->p;
