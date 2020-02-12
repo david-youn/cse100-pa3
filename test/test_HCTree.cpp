@@ -59,3 +59,70 @@ TEST_F(SimpleHCTreeFixture, TEST_DECODE) {
     istringstream is("00");
     ASSERT_EQ(tree.decode(is), 'b');
 }
+
+class AdvancedHCTreeFixture : public ::testing::Test {
+  protected:
+    HCTree tree2;
+
+  public:
+    AdvancedHCTreeFixture() {
+        // initialization code here
+        vector<unsigned int> freqs(256);
+        freqs[' '] = 27;
+        freqs['+'] = 32;
+        freqs['D'] = 15;
+        freqs['a'] = 12;
+        freqs['J'] = 15;
+        freqs['o'] = 7;
+        freqs['Z'] = 10;
+        freqs['n'] = 7;
+        freqs['t'] = 1800;
+        freqs['h'] = 300;
+        tree2.build(freqs);
+    }
+};
+
+TEST_F(AdvancedHCTreeFixture, TEST_ENCODEA) {
+    ostringstream os;
+    tree2.encode(' ', os);
+    ASSERT_EQ(os.str(), "0000");
+}
+
+TEST_F(AdvancedHCTreeFixture, TEST_ENCODEB) {
+    ostringstream os;
+    tree2.encode('+', os);
+    ASSERT_EQ(os.str(), "0010");
+}
+
+TEST_F(AdvancedHCTreeFixture, TEST_ENCODEC) {
+    ostringstream os;
+    tree2.encode('o', os);
+    ASSERT_EQ(os.str(), "000100");
+}
+
+TEST_F(AdvancedHCTreeFixture, TEST_ENCODED) {
+    ostringstream os;
+    tree2.encode('Z', os);
+    ASSERT_EQ(os.str(), "001110");
+}
+
+TEST_F(AdvancedHCTreeFixture, TEST_ENCODEE) {
+    ostringstream os;
+    tree2.encode('h', os);
+    ASSERT_EQ(os.str(), "01");
+}
+
+TEST_F(AdvancedHCTreeFixture, TEST_DECODEA) {
+    istringstream is("1");
+    ASSERT_EQ(tree2.decode(is), 't');
+}
+
+TEST_F(AdvancedHCTreeFixture, TEST_DECODEB) {
+    istringstream is("000101");
+    ASSERT_EQ(tree2.decode(is), 'n');
+}
+
+TEST_F(AdvancedHCTreeFixture, TEST_DECODEC) {
+    istringstream is("00110");
+    ASSERT_EQ(tree2.decode(is), 'D');
+}

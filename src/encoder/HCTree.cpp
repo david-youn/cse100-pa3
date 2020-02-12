@@ -104,9 +104,9 @@ byte HCTree::decode(istream& in) const {
     char c;
     while (in.get(c)) {
         if (c == '0') {
-            curr = root->c0;
+            curr = curr->c0;
         } else {
-            curr = root->c1;
+            curr = curr->c1;
         }
     }
     return curr->symbol;
