@@ -102,7 +102,8 @@ void HCTree::encode(byte symbol, ostream& out) const {
 byte HCTree::decode(istream& in) const {
     HCNode* curr = root;
     char c;
-    while (in.get(c)) {
+    while (curr->c0 != nullptr) {
+        in.get(c);
         if (c == '0') {
             curr = curr->c0;
         } else {

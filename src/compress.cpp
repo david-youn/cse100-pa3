@@ -52,6 +52,7 @@ void pseudoCompression(string inFileName, string outFileName) {
         }
         tree.encode(nextChar, ofile);
     }
+    file.close();
 }
 
 /* TODO: True compression with bitwise i/o and small header (final) */
