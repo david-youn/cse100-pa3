@@ -26,6 +26,9 @@ class BitOutputStream {
         // initializing member variables
         bufSize = bufSize;
         buf = new char[bufSize];
+        for (int i = 0; i < bufSize; i++) {
+            buf[i] = NULL;
+        }
         nbits = 0;
     };
 
