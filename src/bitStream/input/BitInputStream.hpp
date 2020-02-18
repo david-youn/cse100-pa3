@@ -26,7 +26,16 @@ class BitInputStream {
 
   public:
     /* TODO: add function header and implement */
-    explicit BitInputStream(istream& is, unsigned int bufSize) : in(is){};
+    explicit BitInputStream(istream& is, unsigned int bufSize) : in(is) {
+        // initializing member variables
+        this->bufSize = bufSize;
+        buf = new char[bufSize];
+        for (int i = 0; i < bufSize; i++) {
+            buf[i] = NULL;
+        }
+        nbits = 0;
+        eofBit = false;
+    };
 
     /* TODO: add function header */
     void fill();

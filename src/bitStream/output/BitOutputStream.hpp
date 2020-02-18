@@ -24,7 +24,7 @@ class BitOutputStream {
     /* TODO: add function header and implement */
     explicit BitOutputStream(ostream& os, unsigned int bufSize) : out(os) {
         // initializing member variables
-        bufSize = bufSize;
+        this->bufSize = bufSize;
         buf = new char[bufSize];
         for (int i = 0; i < bufSize; i++) {
             buf[i] = NULL;
@@ -37,6 +37,8 @@ class BitOutputStream {
 
     /* TODO: add function header */
     void writeBit(unsigned int i);
+
+    ~BitOutputStream();
 };
 
 #endif
