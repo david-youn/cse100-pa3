@@ -22,7 +22,12 @@ class BitOutputStream {
 
   public:
     /* TODO: add function header and implement */
-    explicit BitOutputStream(ostream& os, unsigned int bufSize) : out(os){};
+    explicit BitOutputStream(ostream& os, unsigned int bufSize) : out(os) {
+        // initializing member variables
+        bufSize = bufSize;
+        buf = new char[bufSize];
+        nbits = 0;
+    };
 
     /* TODO: add function header */
     void flush();

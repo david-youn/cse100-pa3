@@ -14,6 +14,7 @@
 /* TODO: add pseudo compression with ascii encoding and naive header
  * (checkpoint) */
 void pseudoCompression(string inFileName, string outFileName) {
+    bool empty = true;
     HCTree tree = HCTree();
     ifstream file;
     ofstream ofile;
@@ -34,6 +35,21 @@ void pseudoCompression(string inFileName, string outFileName) {
             break;
         }
         freqs.at((int)nextChar) = freqs.at((int)nextChar) + 1;
+    }
+
+    // checking if the file is empty
+    for (int i = 0; i < freqs.size(); i++) {
+        if (freqs.at(i) != 0) {
+            empty = false;
+            break;
+        }
+    }
+
+    // if file is empty, return empty file
+    if (empty) {
+        file.close();
+        ofile.close();
+        return;
     }
 
     for (int i = 0; i < freqs.size(); i++) {
