@@ -18,3 +18,21 @@ TEST(BitInputStreamTests, SIMPLE_TEST) {
     ASSERT_EQ(1, bis.readBit());
     ASSERT_EQ(0, bis.readBit());
 }
+
+TEST(BitInputStreamTests, SIMPLE_TEST2) {
+    string byteStr = "11001010";
+    char byte = (char)stoi(byteStr, nullptr, 2);
+
+    stringstream ss;
+    ss.write(&byte, 1);
+    BitInputStream bis(ss, 1);
+
+    ASSERT_EQ(1, bis.readBit());
+    ASSERT_EQ(1, bis.readBit());
+    ASSERT_EQ(0, bis.readBit());
+    ASSERT_EQ(0, bis.readBit());
+    ASSERT_EQ(1, bis.readBit());
+    ASSERT_EQ(0, bis.readBit());
+    ASSERT_EQ(1, bis.readBit());
+    ASSERT_EQ(0, bis.readBit());
+}
