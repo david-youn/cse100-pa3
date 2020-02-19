@@ -30,6 +30,7 @@ unsigned int BitInputStream::readBit() {
     // fills buffer again
     if (nbits == bufSize * 8) {
         fill();
+        nbits = 0;
     }
     int byte = nbits / 8;
     int bit = nbits % 8;

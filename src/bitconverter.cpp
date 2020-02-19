@@ -53,7 +53,6 @@ void charToBit(string inFileName, string outFileName, unsigned int bufSize) {
     vector<unsigned char> bitsBuf;
     while (1) {
         unsigned int nextBit = in.readBit();
-        cout << "nextBit: " << nextBit << endl;
         if (in.eof()) break;
         unsigned char bit = (nextBit == 0) ? '0' : '1';
         bitsBuf.push_back(bit);

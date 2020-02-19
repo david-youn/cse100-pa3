@@ -30,9 +30,6 @@ class BitInputStream {
         // initializing member variables
         this->bufSize = bufSize;
         buf = new char[bufSize];
-        for (int i = 0; i < bufSize; i++) {
-            buf[i] = 0;
-        }
         fill();
         nbits = 0;
         eofBit = false;
