@@ -53,4 +53,4 @@ void BitOutputStream::writeBit(unsigned int i) {
     nbits++;
 }
 
-BitOutputStream::~BitOutputStream() { delete (buf); }
+BitOutputStream::~BitOutputStream() { delete[](buf); }

@@ -31,8 +31,9 @@ class BitInputStream {
         this->bufSize = bufSize;
         buf = new char[bufSize];
         for (int i = 0; i < bufSize; i++) {
-            buf[i] = NULL;
+            buf[i] = 0;
         }
+        fill();
         nbits = 0;
         eofBit = false;
     };
@@ -45,6 +46,8 @@ class BitInputStream {
 
     /* TODO: add function header */
     unsigned int readBit();
+
+    ~BitInputStream();
 };
 
 #endif
