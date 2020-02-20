@@ -3,6 +3,7 @@
  *
  * Author:
  */
+#include <math.h>
 #include <fstream>
 #include <iostream>
 
@@ -52,6 +53,7 @@ void pseudoCompression(string inFileName, string outFileName) {
         return;
     }
 
+    // writing the header to ofile
     for (int i = 0; i < freqs.size(); i++) {
         ofile << freqs.at(i) << endl;
     }
@@ -89,6 +91,7 @@ void trueCompression(string inFileName, string outFileName) {
         freqs.push_back(0);
     }
 
+    // filling freqs vector
     while (true) {
         nextChar = file.get();
         if (file.eof()) {
@@ -97,10 +100,15 @@ void trueCompression(string inFileName, string outFileName) {
         freqs.at((int)nextChar) = freqs.at((int)nextChar) + 1;
     }
 
-    // checking if the file is empty
+    int maxF = 0;
+    // checking if the file is empty and also find max frequency
     for (int i = 0; i < freqs.size(); i++) {
         if (freqs.at(i) != 0) {
             empty = false;
+            // finding the maximum frequency
+            if (maxF < freqs.at(i)) {
+                maxF = freqs.at(i);
+            }
             break;
         }
     }
@@ -112,6 +120,45 @@ void trueCompression(string inFileName, string outFileName) {
         return;
     }
 
+    int freqSize = ceil(log2(maxF));
+    // creating a vector to hold 1 at position for nonzero frequencies in freq
+    vector<unsigned int> binaryFreqs;
+    for (int i = 0; i < 256; i++) {
+        binaryFreqs.push_back(0);
+    }
+    for (int i = 0; i < 256; i++) {
+        if (freqs.at(i) != 0) {
+            binaryFreqs.at(i) = 1;
+        }
+    }
+
+    string strFreq = "";
+    int binPos = 0;
+    int bitPos = 0;
+    // now translating into bits
+    for (int i = 0; i < 32; i++) {
+        unsigned int my_bit = 0;
+
+        for (int j = 0; j < 8; j++) {
+            if (binaryFreqs.at(binPos) != 0) {
+                bitPos = binPos % 8;
+                my_bit = (1 << (7 - bitPos)) | my_bit;
+            }
+            binPos++;
+        }
+
+        // converting my_bit into a binary manually
+        int ascii = 0;
+        for (int k = 0; k < 8; k++) {
+            ascii = (my_bit % 10) * pow(2, k);
+            my_bit = my_bit / 10;
+        }
+        ofile << ascii << endl;
+        char c = ascii;
+        strFreq = strFreq + c;
+    }
+
+    // writing header
     for (int i = 0; i < freqs.size(); i++) {
         ofile << freqs.at(i) << endl;
     }
