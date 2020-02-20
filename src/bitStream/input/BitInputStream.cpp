@@ -22,15 +22,16 @@ bool BitInputStream::eof() { return eofBit; }
 
 /* TODO */
 unsigned int BitInputStream::readBit() {
-    if (atEndOfFile()) {
-        eofBit = true;
-        fill();
-        return 0;
-    }
     // fills buffer again
     if (nbits % (bufSize * 8) == 0) {
         fill();
         nbits = 0;
+    }
+
+    if (atEndOfFile()) {
+        eofBit = true;
+        fill();
+        return 0;
     }
 
     int byte = nbits / 8;
