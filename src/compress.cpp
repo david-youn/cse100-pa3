@@ -6,6 +6,7 @@
 #include <math.h>
 #include <fstream>
 #include <iostream>
+#include <string>
 
 #include "FileUtils.hpp"
 #include "HCNode.hpp"
@@ -121,6 +122,7 @@ void trueCompression(string inFileName, string outFileName) {
     }
 
     int freqSize = ceil(log2(maxF));
+
     // creating a vector to hold 1 at position for nonzero frequencies in freq
     vector<unsigned int> binaryFreqs;
     for (int i = 0; i < 256; i++) {
@@ -137,7 +139,7 @@ void trueCompression(string inFileName, string outFileName) {
     int bitPos = 0;
     // now translating into bits
     for (int i = 0; i < 32; i++) {
-        unsigned int my_bit = 0;
+        char my_bit = 0;
 
         for (int j = 0; j < 8; j++) {
             if (binaryFreqs.at(binPos) != 0) {
@@ -146,22 +148,51 @@ void trueCompression(string inFileName, string outFileName) {
             }
             binPos++;
         }
+        strFreq = strFreq + my_bit;
+    }
 
-        // converting my_bit into a binary manually
-        int ascii = 0;
-        for (int k = 0; k < 8; k++) {
-            ascii = (my_bit % 10) * pow(2, k);
-            my_bit = my_bit / 10;
+    // writing the 256-bit header intro
+    ofile << strFreq;
+
+    /*
+        string fSize = "";
+
+        while (freqSize != 0) {
+            if (freqSize % 2 == 1) {
+                fSize = '1' + fSize;
+            } else {
+                fSize = '0' + fSize;
+            }
+            freqSize = freqSize / 2;
         }
-        ofile << ascii << endl;
-        char c = ascii;
-        strFreq = strFreq + c;
+        while (fSize.size() != 8) {
+            fSize = '0' + fSize;
+        }
+
+        unsigned char byte = (unsigned char)stoi(fSize, nullptr, 2);
+    */
+
+    // writing 8-bit max frequency
+    unsigned char mybyte = (char)freqSize;
+    ofile << mybyte;
+
+    // changing the frequencies into a long string of "binary"
+    string binrep = "";
+    for (int i = 0; i < 256; i++) {
+        int freq = freqs.at(i);
+        if (freq != 0) {
+            for (int i = freqSize; i >= 0; i--) {
+                int k = freq >> i;
+                if (k & 1) {
+                    binrep = binrep + "1";
+                } else {
+                    binrep = binrep + "0";
+                }
+            }
+        }
     }
 
-    // writing header
-    for (int i = 0; i < freqs.size(); i++) {
-        ofile << freqs.at(i) << endl;
-    }
+    ofile << "binrep: " << binrep << endl;
 
     tree.build(freqs);
     file.close();
