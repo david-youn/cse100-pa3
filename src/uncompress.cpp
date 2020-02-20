@@ -113,16 +113,17 @@ void trueDecompression(string inFileName, string outFileName) {
     }
 
     vector<unsigned int> just_freqs;
-
-    for (int i = 0; i < nonZeroNum; i = i + f_asc) {
-        string fr = nrep.substr(i, i + f_asc);
-
-        int actualFreq = 0;
+    cout << "nonZeroNum: " << nonZeroNum << endl;
+    for (int i = 0; i < nonZeroNum; i++) {
+        string fr = nrep.substr(i * f_asc, f_asc);
+        cout << "str fr: " << fr << endl;
+        unsigned int actualFreq = 0;
         int power = fr.size() - 1;
         // manually converting the string representation binary to its int
         for (int k = 0; k < fr.size(); k++) {
             if (fr.at(k) == '1') {
                 actualFreq = actualFreq + pow(2, power);
+                cout << " building actual freq: " << actualFreq << endl;
             }
             power--;
         }
