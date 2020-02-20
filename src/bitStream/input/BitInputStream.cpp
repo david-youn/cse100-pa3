@@ -6,13 +6,7 @@
 #include "BitInputStream.hpp"
 
 /* TODO */
-void BitInputStream::fill() {
-    cout << "FILL" << endl;
-    in.read(buf, bufSize);
-    for (int i = 0; i < bufSize; i++) {
-        cout << "i in buf: " << i << ": " << (unsigned int)buf[i] << endl;
-    }
-}
+void BitInputStream::fill() { in.read(buf, bufSize); }
 
 /* TODO */
 bool BitInputStream::atEndOfFile() {
@@ -34,17 +28,17 @@ unsigned int BitInputStream::readBit() {
         return 0;
     }
     // fills buffer again
-    if (nbits == bufSize * 8) {
+    if (nbits % (bufSize * 8) == 0) {
         fill();
         nbits = 0;
     }
+
     int byte = nbits / 8;
     int bit = nbits % 8;
 
     unsigned int my_bit = ((unsigned int)buf[byte]) >> (7 - bit);
     my_bit = (1 & my_bit);
     nbits++;
-    cout << "MYBIT: " << my_bit << endl;
     return my_bit;
 }
 

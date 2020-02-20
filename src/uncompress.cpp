@@ -40,7 +40,34 @@ void pseudoDecompression(string inFileName, string outFileName) {
 }
 
 /* TODO: True decompression with bitwise i/o and small header (final) */
-void trueDecompression(string inFileName, string outFileName) {}
+void trueDecompression(string inFileName, string outFileName) {
+    HCTree tree = HCTree();
+    ifstream file;
+    ofstream ofile;
+    BitInputStream BIS = BitInputStream(file, 4000);
+
+    unsigned char nextChar;
+    file.open(inFileName);
+    ofile.open(outFileName);
+
+    vector<unsigned int> freqs;
+
+    unsigned int charNum = 0;
+
+    for (int i = 0; i < 256; i++) {
+        string line;
+        getline(file, line);
+        unsigned int f = atoi(line.c_str());
+        charNum = charNum + f;
+        freqs.push_back(f);
+    }
+
+    tree.build(freqs);
+    for (int i = 0; i < charNum; i++) {
+        ofile << tree.decode(BIS);
+    }
+    file.close();
+}
 
 /* TODO: Main program that runs the uncompress */
 int main(int argc, char* argv[]) {
@@ -68,6 +95,8 @@ int main(int argc, char* argv[]) {
 
     if (isAsciiOutput) {
         pseudoDecompression(inFileName, outFileName);
+    } else {
+        trueDecompression(inFileName, outFileName);
     }
     return 0;
 }

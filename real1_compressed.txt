@@ -1,0 +1,301 @@
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+2
+3
+4
+5
+3
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+byte: 0    buf[byte]: 4294967168
+byte: 0    buf[byte]: 4294967232
+byte: 0    buf[byte]: 4294967232
+byte: 0    buf[byte]: 4294967248
+byte: 0    buf[byte]: 4294967256
+byte: 0    buf[byte]: 4294967256
+byte: 0    buf[byte]: 4294967256
+byte: 0    buf[byte]: 4294967256
+byte: 1    buf[byte]: 0
+byte: 1    buf[byte]: 0
+byte: 1    buf[byte]: 0
+byte: 1    buf[byte]: 0
+byte: 1    buf[byte]: 0
+byte: 1    buf[byte]: 4
+byte: 1    buf[byte]: 4
+byte: 1    buf[byte]: 5
+byte: 2    buf[byte]: 0
+byte: 2    buf[byte]: 64
+byte: 2    buf[byte]: 64
+byte: 2    buf[byte]: 80
+byte: 2    buf[byte]: 88
+byte: 2    buf[byte]: 88
+byte: 2    buf[byte]: 90
+byte: 2    buf[byte]: 90
+byte: 3    buf[byte]: 4294967168
+byte: 3    buf[byte]: 4294967168
+byte: 3    buf[byte]: 4294967200
+byte: 3    buf[byte]: 4294967200
+byte: 3    buf[byte]: 4294967208
+byte: 3    buf[byte]: 4294967208
+byte: 3    buf[byte]: 4294967210
+byte: 3    buf[byte]: 4294967211
+byte: 4    buf[byte]: 4294967168
+byte: 4    buf[byte]: 4294967232
+byte: 4    buf[byte]: 4294967264
+byte: 4    buf[byte]: 4294967280
+byte: 4    buf[byte]: 4294967288
+byte: 4    buf[byte]: 4294967292
+byte: 4    buf[byte]: 4294967294
+case1
+Øint buf[i]4294967256
+int buf[i]5
+Zint buf[i]90
+«int buf[i]4294967211
+þint buf[i]4294967294

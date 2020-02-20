@@ -48,7 +48,6 @@ void BitOutputStream::writeBit(unsigned int i) {
 
     // adding to buf at position byte at position bit
     buf[byte] = (buf[byte] | my_bit);
-
     nbits++;
 }
 
