@@ -58,8 +58,6 @@ void trueDecompression(string inFileName, string outFileName) {
         freqs.push_back(0);
     }
 
-    unsigned int charNum = 0;
-
     string brep = "";
 
     // reading the first 32 bytes from header
@@ -113,27 +111,20 @@ void trueDecompression(string inFileName, string outFileName) {
     }
 
     vector<unsigned int> just_freqs;
-    cout << "nonZeroNum: " << nonZeroNum << endl;
     for (int i = 0; i < nonZeroNum; i++) {
         string fr = nrep.substr(i * f_asc, f_asc);
-        cout << "str fr: " << fr << endl;
         unsigned int actualFreq = 0;
         int power = fr.size() - 1;
         // manually converting the string representation binary to its int
         for (int k = 0; k < fr.size(); k++) {
             if (fr.at(k) == '1') {
                 actualFreq = actualFreq + pow(2, power);
-                cout << " building actual freq: " << actualFreq << endl;
             }
             power--;
         }
         just_freqs.push_back(actualFreq);
     }
 
-    cout << "jfsize: " << just_freqs.size() << endl;
-    for (int i = 0; i < just_freqs.size(); i++) {
-        cout << just_freqs.at(i) << endl;
-    }
     int counter = 0;
     for (int i = 0; i < freqs.size(); i++) {
         if (freqs.at(i) != 0) {
@@ -142,15 +133,10 @@ void trueDecompression(string inFileName, string outFileName) {
         }
     }
 
-    /*
-        for (int i = 0; i < 256; i++) {
-            string line;
-            getline(file, line);
-            unsigned int f = atoi(line.c_str());
-            charNum = charNum + f;
-            freqs.push_back(f);
-        }
-    */
+    unsigned int charNum = 0;
+    for (int i = 0; i < 256; i++) {
+        charNum = charNum + freqs.at(i);
+    }
 
     tree.build(freqs);
     for (int i = 0; i < charNum; i++) {

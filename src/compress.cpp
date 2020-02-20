@@ -101,15 +101,9 @@ void trueCompression(string inFileName, string outFileName) {
         freqs.at((int)nextChar) = freqs.at((int)nextChar) + 1;
     }
 
-    int maxF = 0;
-    // checking if the file is empty and also find max frequency
     for (int i = 0; i < freqs.size(); i++) {
         if (freqs.at(i) != 0) {
             empty = false;
-            // finding the maximum frequency
-            if (maxF < freqs.at(i)) {
-                maxF = freqs.at(i);
-            }
             break;
         }
     }
@@ -119,6 +113,17 @@ void trueCompression(string inFileName, string outFileName) {
         file.close();
         ofile.close();
         return;
+    }
+
+    unsigned int maxF = 0;
+    // checking if the file is empty and also find max frequency
+    for (int i = 0; i < freqs.size(); i++) {
+        if (freqs.at(i) != 0) {
+            // finding the maximum frequency
+            if (maxF < freqs.at(i)) {
+                maxF = freqs.at(i);
+            }
+        }
     }
 
     int freqSize = ceil(log2(maxF));
@@ -153,24 +158,6 @@ void trueCompression(string inFileName, string outFileName) {
 
     // writing the 256-bit header intro
     ofile << strFreq;
-
-    /*
-        string fSize = "";
-
-        while (freqSize != 0) {
-            if (freqSize % 2 == 1) {
-                fSize = '1' + fSize;
-            } else {
-                fSize = '0' + fSize;
-            }
-            freqSize = freqSize / 2;
-        }
-        while (fSize.size() != 8) {
-            fSize = '0' + fSize;
-        }
-
-        unsigned char byte = (unsigned char)stoi(fSize, nullptr, 2);
-    */
 
     // writing 8-bit max frequency
     unsigned char mybyte = (char)freqSize;
