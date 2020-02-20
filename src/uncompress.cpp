@@ -3,8 +3,10 @@
  *
  * Author:
  */
+#include <math.h>
 #include <fstream>
 #include <iostream>
+#include <string>
 
 #include <cxxopts.hpp>
 #include "FileUtils.hpp"
@@ -52,15 +54,102 @@ void trueDecompression(string inFileName, string outFileName) {
 
     vector<unsigned int> freqs;
 
+    for (int i = 0; i < 256; i++) {
+        freqs.push_back(0);
+    }
+
     unsigned int charNum = 0;
 
-    for (int i = 0; i < 256; i++) {
-        string line;
-        getline(file, line);
-        unsigned int f = atoi(line.c_str());
-        charNum = charNum + f;
-        freqs.push_back(f);
+    string brep = "";
+
+    // reading the first 32 bytes from header
+    for (int i = 0; i < 32; i++) {
+        char c = file.get();
+        int asc = (int)c;
+
+        for (int i = 7; i >= 0; i--) {
+            int k = asc >> i;
+            if (k & 1) {
+                brep = brep + "1";
+            } else {
+                brep = brep + "0";
+            }
+        }
     }
+
+    int nonZeroNum = 0;
+    // now converting brep into array with 1's and 0's for frequency
+    for (int i = 0; i < 256; i++) {
+        if (brep.at(i) == '1') {
+            freqs.at(i) = 1;
+            nonZeroNum++;
+        }
+    }
+
+    // now converting the 8-bit max frequency value
+    char f = file.get();
+    int f_asc = (int)f;
+
+    int numBits = nonZeroNum * f_asc;
+    if (numBits % 8 != 0) {
+        numBits = numBits + (8 - (numBits % 8));
+    }
+    int numBytes = numBits / 8;
+
+    // reading in the next numBytes worth of data
+    string nrep = "";
+    for (int i = 0; i < numBytes; i++) {
+        char next = file.get();
+        int n_asc = (int)next;
+
+        for (int i = 7; i >= 0; i--) {
+            int k = n_asc >> i;
+            if (k & 1) {
+                nrep = nrep + "1";
+            } else {
+                nrep = nrep + "0";
+            }
+        }
+    }
+
+    vector<unsigned int> just_freqs;
+
+    for (int i = 0; i < nonZeroNum; i = i + f_asc) {
+        string fr = nrep.substr(i, i + f_asc);
+
+        int actualFreq = 0;
+        int power = fr.size() - 1;
+        // manually converting the string representation binary to its int
+        for (int k = 0; k < fr.size(); k++) {
+            if (fr.at(k) == '1') {
+                actualFreq = actualFreq + pow(2, power);
+            }
+            power--;
+        }
+        just_freqs.push_back(actualFreq);
+    }
+
+    cout << "jfsize: " << just_freqs.size() << endl;
+    for (int i = 0; i < just_freqs.size(); i++) {
+        cout << just_freqs.at(i) << endl;
+    }
+    int counter = 0;
+    for (int i = 0; i < freqs.size(); i++) {
+        if (freqs.at(i) != 0) {
+            freqs.at(i) = just_freqs.at(counter);
+            counter++;
+        }
+    }
+
+    /*
+        for (int i = 0; i < 256; i++) {
+            string line;
+            getline(file, line);
+            unsigned int f = atoi(line.c_str());
+            charNum = charNum + f;
+            freqs.push_back(f);
+        }
+    */
 
     tree.build(freqs);
     for (int i = 0; i < charNum; i++) {
