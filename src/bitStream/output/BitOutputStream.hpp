@@ -28,6 +28,7 @@ class BitOutputStream {
         buf = new char[bufSize];
         for (int i = 0; i < bufSize; i++) {
             buf[i] = NULL;
+            cout << "buf[i]: " << buf[i] << endl;
         }
         nbits = 0;
     };

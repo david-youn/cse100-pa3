@@ -72,7 +72,34 @@ void HCTree::build(const vector<unsigned int>& freqs) {
 }
 
 /* TODO */
-// void HCTree::encode(byte symbol, BitOutputStream& out) const {}
+void HCTree::encode(byte symbol, BitOutputStream& out) const {
+    HCNode* curr = nullptr;
+    HCNode* prev = nullptr;
+    string code = "";
+
+    curr = leaves.at(symbol);
+
+    // for the case of just having one node in the HCT
+    if (curr == root) {
+        out.writeBit(0);
+    }
+
+    while (curr != root) {
+        prev = curr;
+        curr = curr->p;
+
+        // checking if c0 or c1
+        if (curr->c0 == prev) {
+            code = '0' + code;
+        } else {
+            code = '1' + code;
+        }
+    }
+
+    for (int i = 0; i < code.length(); i++) {
+        out.writeBit(code.at(i));
+    }
+}
 
 /* TODO */
 void HCTree::encode(byte symbol, ostream& out) const {
@@ -102,7 +129,19 @@ void HCTree::encode(byte symbol, ostream& out) const {
 }
 
 /* TODO */
-// byte HCTree::decode(BitInputStream& in) const { return ' '; }
+byte HCTree::decode(BitInputStream& in) const {
+    HCNode* curr = root;
+    unsigned int c;
+    while (curr->c0 != nullptr && curr->c1 != nullptr) {
+        c = in.readBit();
+        if (c == 0) {
+            curr = curr->c0;
+        } else {
+            curr = curr->c1;
+        }
+    }
+    return curr->symbol;
+}
 
 /* TODO */
 byte HCTree::decode(istream& in) const {

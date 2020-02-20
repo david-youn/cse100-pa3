@@ -72,7 +72,65 @@ void pseudoCompression(string inFileName, string outFileName) {
 }
 
 /* TODO: True compression with bitwise i/o and small header (final) */
-void trueCompression(string inFileName, string outFileName) {}
+void trueCompression(string inFileName, string outFileName) {
+    bool empty = true;
+    HCTree tree = HCTree();
+    ifstream file;
+    ofstream ofile;
+    BitOutputStream bos = BitOutputStream(ofile, 4000);
+    unsigned char nextChar;
+    file.open(inFileName);
+    ofile.open(outFileName);
+
+    // initializing a vector of ints to size 256 with value 0
+    vector<unsigned int> freqs;
+
+    for (int i = 0; i < 256; i++) {
+        freqs.push_back(0);
+    }
+
+    while (true) {
+        nextChar = file.get();
+        if (file.eof()) {
+            break;
+        }
+        freqs.at((int)nextChar) = freqs.at((int)nextChar) + 1;
+    }
+
+    // checking if the file is empty
+    for (int i = 0; i < freqs.size(); i++) {
+        if (freqs.at(i) != 0) {
+            empty = false;
+            break;
+        }
+    }
+
+    // if file is empty, return empty file
+    if (empty) {
+        file.close();
+        ofile.close();
+        return;
+    }
+
+    for (int i = 0; i < freqs.size(); i++) {
+        ofile << freqs.at(i) << endl;
+    }
+
+    tree.build(freqs);
+    file.close();
+    file.open(inFileName);
+
+    // going through inFileName and creating the frequency vector
+    while (true) {
+        nextChar = file.get();
+        if (file.eof()) {
+            break;
+        }
+        tree.encode(nextChar, bos);
+    }
+    bos.flush();
+    file.close();
+}
 
 /* TODO: Main program that runs the compress */
 int main(int argc, char* argv[]) {
@@ -100,6 +158,8 @@ int main(int argc, char* argv[]) {
 
     if (isAsciiOutput) {
         pseudoCompression(inFileName, outFileName);
+    } else {
+        trueCompression(inFileName, outFileName);
     }
 
     return 0;
