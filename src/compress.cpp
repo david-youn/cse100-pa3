@@ -181,7 +181,7 @@ void trueCompression(string inFileName, string outFileName) {
     for (int i = 0; i < 256; i++) {
         int freq = freqs.at(i);
         if (freq != 0) {
-            for (int i = freqSize; i >= 0; i--) {
+            for (int i = freqSize - 1; i >= 0; i--) {
                 int k = freq >> i;
                 if (k & 1) {
                     binrep = binrep + "1";
@@ -192,7 +192,16 @@ void trueCompression(string inFileName, string outFileName) {
         }
     }
 
-    ofile << "binrep: " << binrep << endl;
+    // until binrep is divisible by 8, append 0's to end
+    while ((binrep.size()) % 8 != 0) {
+        binrep = binrep + "0";
+    }
+
+    // going through and converting binrep to bits
+    for (int i = 0; i < binrep.size(); i = i + 8) {
+        unsigned char byte = (char)stoi(binrep.substr(i, 8), nullptr, 2);
+        ofile << byte;
+    }
 
     tree.build(freqs);
     file.close();
