@@ -12,9 +12,13 @@ static void deleteHelper(HCNode* n) {
         return;
     }
     // recursively goes through the left sub-tree of the tree
-    deleteHelper(n->c0);
+    if (n->c0 != nullptr) {
+        deleteHelper(n->c0);
+    }
     // recursively goes through the right sub-tree of the tree
-    deleteHelper(n->c1);
+    if (n->c1 != nullptr) {
+        deleteHelper(n->c1);
+    }
     delete (n);
     n = nullptr;
 }

@@ -39,6 +39,7 @@ void pseudoDecompression(string inFileName, string outFileName) {
         ofile << tree.decode(file);
     }
     file.close();
+    ofile.close();
 }
 
 /* TODO: True decompression with bitwise i/o and small header (final) */
@@ -143,6 +144,7 @@ void trueDecompression(string inFileName, string outFileName) {
         ofile << tree.decode(BIS);
     }
     file.close();
+    ofile.close();
 }
 
 /* TODO: Main program that runs the uncompress */

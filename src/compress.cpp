@@ -72,6 +72,7 @@ void pseudoCompression(string inFileName, string outFileName) {
         tree.encode(nextChar, ofile);
     }
     file.close();
+    ofile.close();
 }
 
 /* TODO: True compression with bitwise i/o and small header (final) */
@@ -204,6 +205,7 @@ void trueCompression(string inFileName, string outFileName) {
     }
     bos.flush();
     file.close();
+    ofile.close();
 }
 
 /* TODO: Main program that runs the compress */
