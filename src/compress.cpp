@@ -1,7 +1,12 @@
 /**
- * TODO: file header
+ * Names: David Youn - A15452585
+ *        Jonathan Yun - A15431969
  *
- * Author:
+ * Sources: Piazza
+ *
+ * This file is used to regulate user interaction and works for the compression
+ * of files. It is used in conjunction with other files including
+ * BitOutputStream.cpp and HCTree.
  */
 #include <math.h>
 #include <fstream>
@@ -13,8 +18,12 @@
 #include "HCTree.hpp"
 #include "cxxopts.hpp"
 
-/* TODO: add pseudo compression with ascii encoding and naive header
- * (checkpoint) */
+/**
+ * Method that translates every char in a given file into its ascii values
+ * Parameter(s): infFIleName - the name of the file to translate
+ *               outFileName - the name of the file to insert the translation
+ * Return: none
+ */
 void pseudoCompression(string inFileName, string outFileName) {
     bool empty = true;
     HCTree tree = HCTree();
@@ -26,8 +35,9 @@ void pseudoCompression(string inFileName, string outFileName) {
 
     // initializing a vector of ints to size 256 with value 0
     vector<unsigned int> freqs;
+    int asciiSize = 256;
 
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < asciiSize; i++) {
         freqs.push_back(0);
     }
 
@@ -39,6 +49,10 @@ void pseudoCompression(string inFileName, string outFileName) {
         freqs.at((int)nextChar) = freqs.at((int)nextChar) + 1;
     }
 
+    // writing the header to ofile
+    for (int i = 0; i < freqs.size(); i++) {
+        ofile << freqs.at(i) << endl;
+    }
     // checking if the file is empty
     for (int i = 0; i < freqs.size(); i++) {
         if (freqs.at(i) != 0) {
@@ -52,11 +66,6 @@ void pseudoCompression(string inFileName, string outFileName) {
         file.close();
         ofile.close();
         return;
-    }
-
-    // writing the header to ofile
-    for (int i = 0; i < freqs.size(); i++) {
-        ofile << freqs.at(i) << endl;
     }
 
     tree.build(freqs);
@@ -75,12 +84,19 @@ void pseudoCompression(string inFileName, string outFileName) {
     ofile.close();
 }
 
-/* TODO: True compression with bitwise i/o and small header (final) */
+/**
+ * Method that compresses a given file and also writes the header to assist
+ * decompression
+ * Parameter(s): inFileName - the file to compress
+ *               outFileName - the file to insert the compression
+ * Return: none
+ */
 void trueCompression(string inFileName, string outFileName) {
     bool empty = true;
     HCTree tree = HCTree();
     ifstream file;
     ofstream ofile;
+    // creates buffer of default sie of 4000
     BitOutputStream bos = BitOutputStream(ofile, 4000);
     unsigned char nextChar;
     file.open(inFileName);
@@ -88,8 +104,10 @@ void trueCompression(string inFileName, string outFileName) {
 
     // initializing a vector of ints to size 256 with value 0
     vector<unsigned int> freqs;
+    int asciiSize = 256;
 
-    for (int i = 0; i < 256; i++) {
+    // fills frequency vector with 0s
+    for (int i = 0; i < asciiSize; i++) {
         freqs.push_back(0);
     }
 
@@ -99,9 +117,11 @@ void trueCompression(string inFileName, string outFileName) {
         if (file.eof()) {
             break;
         }
+        // inserts freqeuncy of corresponding ascii index
         freqs.at((int)nextChar) = freqs.at((int)nextChar) + 1;
     }
 
+    // checks if the file is empty or if there are no frequencies
     for (int i = 0; i < freqs.size(); i++) {
         if (freqs.at(i) != 0) {
             empty = false;
@@ -127,14 +147,17 @@ void trueCompression(string inFileName, string outFileName) {
         }
     }
 
+    // holds the maximum number of bits requred to hold the frequencies of the
+    // the symbols
     int freqSize = ceil(log2(maxF));
 
     // creating a vector to hold 1 at position for nonzero frequencies in freq
     vector<unsigned int> binaryFreqs;
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < asciiSize; i++) {
         binaryFreqs.push_back(0);
     }
-    for (int i = 0; i < 256; i++) {
+    // finding corresponding indices where frequencies are nonzero
+    for (int i = 0; i < asciiSize; i++) {
         if (freqs.at(i) != 0) {
             binaryFreqs.at(i) = 1;
         }
@@ -143,15 +166,22 @@ void trueCompression(string inFileName, string outFileName) {
     string strFreq = "";
     int binPos = 0;
     int bitPos = 0;
+    // variables used to get rid of magic numbers, describe different sizes
+    int byteSize = 32;
+    int bitSize = 8;
+    int shiftSize = 7;
     // now translating into bits
-    for (int i = 0; i < 32; i++) {
+    for (int i = 0; i < byteSize; i++) {
         char my_bit = 0;
-
-        for (int j = 0; j < 8; j++) {
+        // iterates through every bit in each byte
+        for (int j = 0; j < bitSize; j++) {
+            // checks if there exists a frequency at corresponding bit
             if (binaryFreqs.at(binPos) != 0) {
-                bitPos = binPos % 8;
-                my_bit = (1 << (7 - bitPos)) | my_bit;
+                bitPos = binPos % bitSize;
+                // insertes bit into byte
+                my_bit = (1 << (shiftSize - bitPos)) | my_bit;
             }
+            // continues to iterate through binaryFreqs
             binPos++;
         }
         strFreq = strFreq + my_bit;
@@ -166,9 +196,10 @@ void trueCompression(string inFileName, string outFileName) {
 
     // changing the frequencies into a long string of "binary"
     string binrep = "";
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < asciiSize; i++) {
         int freq = freqs.at(i);
         if (freq != 0) {
+            // translates the frequency into a string of binary
             for (int i = freqSize - 1; i >= 0; i--) {
                 int k = freq >> i;
                 if (k & 1) {
@@ -181,13 +212,13 @@ void trueCompression(string inFileName, string outFileName) {
     }
 
     // until binrep is divisible by 8, append 0's to end
-    while ((binrep.size()) % 8 != 0) {
+    while ((binrep.size()) % bitSize != 0) {
         binrep = binrep + "0";
     }
 
-    // going through and converting binrep to bits
-    for (int i = 0; i < binrep.size(); i = i + 8) {
-        unsigned char byte = (char)stoi(binrep.substr(i, 8), nullptr, 2);
+    // going through and converting the binary string to actual bits
+    for (int i = 0; i < binrep.size(); i = i + bitSize) {
+        unsigned char byte = (char)stoi(binrep.substr(i, bitSize), nullptr, 2);
         ofile << byte;
     }
 
@@ -203,12 +234,19 @@ void trueCompression(string inFileName, string outFileName) {
         }
         tree.encode(nextChar, bos);
     }
+    // clears the buffer
     bos.flush();
     file.close();
     ofile.close();
 }
 
-/* TODO: Main program that runs the compress */
+/**
+ * Main method that regulates user interaction and input and calls the
+ * corresponding function based on flages by user
+ * Parameter(s): argc - default argument counting number of passed arguments
+ *               argv[] - default array parameter that hold user inputs
+ * Return: int - default return type for main method
+ */
 int main(int argc, char* argv[]) {
     cxxopts::Options options("./compress",
                              "Compresses files using Huffman Encoding");
@@ -231,7 +269,7 @@ int main(int argc, char* argv[]) {
         cout << options.help({""}) << std::endl;
         exit(0);
     }
-
+    // checks for user flags
     if (isAsciiOutput) {
         pseudoCompression(inFileName, outFileName);
     } else {

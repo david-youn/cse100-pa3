@@ -1,13 +1,23 @@
 /**
- * TODO: file header
+ * Names: David Youn - A15452585
+ *        Jonathan Yun - A15431969
  *
- * Author:
+ * Sources: Piazza
+ *
+ * This file is used to define the HCTree object as well as its available
+ * functions. It is used in conjunction with files corresponding to
+ * BitInputStream, BitOutputStream, and HCNode.
  */
 #include "HCTree.hpp"
 
 priority_queue<HCNode*, vector<HCNode*>, HCNodePtrComp> pq;
 
+/**
+ * Helper recursive function to the default destructor that iterates through
+ * the entire tree and deletes every node.
+ */
 static void deleteHelper(HCNode* n) {
+    // base case that returns if there are no more nodes
     if (n == nullptr) {
         return;
     }
@@ -19,11 +29,14 @@ static void deleteHelper(HCNode* n) {
     if (n->c1 != nullptr) {
         deleteHelper(n->c1);
     }
+    // deletes the node and sets pointer to null
     delete (n);
     n = nullptr;
 }
 
-/* TODO */
+/**
+ * Defualt destructor for the HCTree object
+ */
 HCTree::~HCTree() {
     while (pq.size() != 0) {
         delete pq.top();
@@ -33,10 +46,17 @@ HCTree::~HCTree() {
     root = nullptr;
 }
 
-/* TODO */
+/**
+ * Method that creates the HCTree by using the provided frequency vector
+ * and creates a node for each char with a nonzero frequency.
+ * Parameter(s): freqs - a vector of size 256 that contains the frequency
+ *                       of the char corresponding to the vector index
+ * Return: none
+ */
 void HCTree::build(const vector<unsigned int>& freqs) {
+    int asciiSize = 256;
     // creating a forest of single-node trees in the PQ
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < asciiSize; i++) {
         // creating nodes for each of the non-zero values
         if (freqs.at(i) != 0) {
             HCNode* n = new HCNode(freqs.at(i), i, nullptr, nullptr, nullptr);
@@ -75,7 +95,13 @@ void HCTree::build(const vector<unsigned int>& freqs) {
     pq.pop();
 }
 
-/* TODO */
+/**
+ * Method that translates a provided byte into its encoded bits into
+ * the provided BitOutputStream.
+ * Parameter(s): symbol - the symbol to encode
+ *              out - the BitOutputStream to write to
+ * Return: none
+ */
 void HCTree::encode(byte symbol, BitOutputStream& out) const {
     HCNode* curr = nullptr;
     HCNode* prev = nullptr;
@@ -105,7 +131,13 @@ void HCTree::encode(byte symbol, BitOutputStream& out) const {
     }
 }
 
-/* TODO */
+/**
+ * Method that translates a provided byte into its ascii binary
+ * representation into the provided ostream.
+ * Parameter(s): symbol - the symbol to encode
+ *              out - the ostream to write to
+ * Return: none
+ */
 void HCTree::encode(byte symbol, ostream& out) const {
     HCNode* curr = nullptr;
     HCNode* prev = nullptr;
@@ -132,10 +164,15 @@ void HCTree::encode(byte symbol, ostream& out) const {
     out << code;
 }
 
-/* TODO */
+/**
+ * Method that decodes a sequence of bits into its corresponding symbol
+ * Parameter(s): in - the BitInputStream to read the sequence of bits from
+ * Return: the byte of the decoded symbol
+ */
 byte HCTree::decode(BitInputStream& in) const {
     HCNode* curr = root;
     unsigned int c;
+    // iterates through entire tree and finds the binary representation
     while (curr->c0 != nullptr && curr->c1 != nullptr) {
         c = in.readBit();
         if (c == 0) {
@@ -147,10 +184,16 @@ byte HCTree::decode(BitInputStream& in) const {
     return curr->symbol;
 }
 
-/* TODO */
+/**
+ * Method that decodes a sequence of ascii values into its corresponding
+ * symbol
+ * Parameter(s): in - the istream to read the sequence of values from
+ * Return: the byte of the decoded symbol
+ */
 byte HCTree::decode(istream& in) const {
     HCNode* curr = root;
     char c;
+    // iterates through entire tree and finds the binary representation
     while (curr->c0 != nullptr && curr->c1 != nullptr) {
         in.get(c);
         if (c == '0') {

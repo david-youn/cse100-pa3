@@ -1,7 +1,12 @@
 /**
- * TODO: file header
+ * Names: David Youn - A15452585
+ *        Jonathan Yun - A15431969
  *
- * Author:
+ * Sources: Piazza
+ *
+ * This file is used to create the HCNode object as well as its methods.
+ * It is used in conjunction with files corresponding with HCTree in order
+ * to properly create the Huffman encoding tree.
  */
 #ifndef HCNODE_HPP
 #define HCNODE_HPP
@@ -41,10 +46,13 @@ ostream& operator<<(ostream& stm, const HCNode& n) {
  */
 struct HCNodePtrComp {
     /* TODO */
+    // overrides comparator that takes in two nodes and returns whether
+    // the frequency of the first node is greater than the second node
     bool operator()(HCNode*& lhs, HCNode*& rhs) const {
         if (lhs->count != rhs->count) {
             return lhs->count > rhs->count;
         }
+        // if frequencies are equal, return lower ascii value
         return lhs->symbol < rhs->symbol;
     }
 };
